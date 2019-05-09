@@ -36,6 +36,53 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    bg.BackgroundGeolocation.onGeofence((bg.GeofenceEvent event){
+      print('[onGeofence] - $event');
+    });
+    bg.BackgroundGeolocation.onGeofencesChange((bg.GeofencesChangeEvent event){
+      print('[onGeofencesChange] - $event');
+    });
+
+    bg.BackgroundGeolocation.ready(bg.Config(
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10.0,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        debug: true,
+        logLevel: bg.Config.LOG_LEVEL_VERBOSE,
+        reset: true
+    )).then((bg.State state) {
+      print('[BackgroundGeolocation.ready State] - $state');
+      if (!state.enabled) {
+        ////
+        // 3.  Start the plugin.
+        //
+        bg.BackgroundGeolocation.start();
+      }
+    });
+  }
+
+  _addHomeGeofence() async {
+    bg.BackgroundGeolocation.addGeofence(bg.Geofence(
+        identifier: "Home",
+        radius: 150,
+        latitude: 45.51921926,
+        longitude: -73.61678581,
+        notifyOnEntry: true,
+        notifyOnExit: false,
+        notifyOnDwell: true,
+        loiteringDelay: 30000,  // 30 seconds
+    )).then((bool success) {
+      print('[addGeofence] success');
+    }).catchError((error) {
+      print('[addGeofence] FAILURE: ${error}');
+    });
+  }
+
   _makeGetRequest() async {
 
     // make request
