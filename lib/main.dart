@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 void main() => runApp(MyApp());
 
