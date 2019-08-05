@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 void main() => runApp(MyApp());
 
@@ -54,7 +55,48 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      _makePostRequest();
     });
+  }
+
+  _makeGetRequest() async {
+
+    // make request
+    Response response = await get('https://jsonplaceholder.typicode.com/posts');
+
+    // sample info available in response
+    int statusCode = response.statusCode;
+    Map<String, String> headers = response.headers;
+    String contentType = headers['content-type'];
+    String json = response.body;
+
+    // TODO convert json to object...
+
+  }
+
+  _makePostRequest() async {
+
+    // set up POST request arguments
+    String url = 'https://jsonplaceholder.typicode.com/posts';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    String json = '{"title": "Hello", "body": "body text", "userId": 1}';
+
+    // make POST request
+    Response response = await post(url, headers: headers, body: json);
+
+    // check the status code for the result
+    int statusCode = response.statusCode;
+
+    // this API passes back the id of the new item added to the body
+    String body = response.body;
+    // {
+    //   "title": "Hello",
+    //   "body": "body text",
+    //   "userId": 1,
+    //   "id": 101
+    // }
+    print('statusCode = $statusCode');
+    print('body = $body');
   }
 
   @override
